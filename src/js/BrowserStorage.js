@@ -8,7 +8,7 @@ export class BrowserStorage {
     }
 
     setItem(key, value) {
-        if (typeof value !== string) {
+        if (typeof value !== 'string') {
             value = this.convertToString(value);
         }
 
@@ -20,7 +20,7 @@ export class BrowserStorage {
     }
 
     getJson(key) {
-        return JSON.stringify(this.getItem(key));
+        return JSON.json(this.getItem(key));
     }
 
     removeItem(key) {
@@ -31,7 +31,7 @@ export class BrowserStorage {
         this.storage.clear();
     }
 
-    isArray(value) {
+    convertToString(value) {
         return JSON.stringify(value);
     }
 }

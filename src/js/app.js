@@ -8,7 +8,9 @@ class ClassicSave {
     constructor() {
         this.data = [];
         this.tempData = [];
-        this.cronJobTimer = 3000;
+        this.cronJobTimer = 10000;
+
+        this.browserStorage = new BrowserStorage();
 
         this.cronJob();
     }
@@ -22,6 +24,12 @@ class ClassicSave {
 
     add(value) {
         this.data = [...this.data, this.generateRow(value)];
+
+        this.saveToStorage();
+    }
+
+    saveToStorage() {
+        this.browserStorage.setItem('temp', this.data);
     }
 
     getData() {
@@ -38,6 +46,8 @@ class ClassicSave {
         });
 
         this.data = [...this.data.filter(d => d)];
+        
+        this.saveToStorage();
     }
 
     reQueueFailedKeys(keys) {
@@ -49,6 +59,8 @@ class ClassicSave {
             if (keys.includes(d.key)) {
                 this.data = [...this.data, this.tempData[index]];
 
+                this.saveToStorage();
+
                 delete this.tempData[index];
             }
         });
@@ -59,7 +71,7 @@ class ClassicSave {
     cronJob() {
         setInterval(() => {
             this.sendToServer(keys => {
-                // this.reQueueFailedKeys(keys);
+                this.reQueueFailedKeys(keys);
             });
         }, this.cronJobTimer);
     }
